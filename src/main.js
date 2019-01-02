@@ -5,11 +5,16 @@ import App from './App'
 import router from './router'
 // import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
-import { Tabbar, TabItem } from 'mint-ui'
+import './css/main.css'
+import { Tabbar, TabItem, TabContainer, TabContainerItem, Cell } from 'mint-ui'
 
 Vue.config.productionTip = false
 Vue.component(Tabbar.name, Tabbar)
 Vue.component(TabItem.name, TabItem)
+Vue.component(TabContainer.name, TabContainer)
+Vue.component(TabContainerItem.name, TabContainerItem)
+Vue.component(Cell.name, Cell)
+// Vue.use(MintUI)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

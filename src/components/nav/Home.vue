@@ -1,11 +1,13 @@
 <template>
   <div>
+    <!-- <container></container> -->
     <tabbar :selected="selected" :tabs="tabs"></tabbar>
   </div>
 </template>
 
 <script>
-import tabbar from '../common/Tabbar'
+// import container from '../common/Container'// 容器区
+import tabbar from '../common/Tabbar'// 底部菜单切换区
 export default {
   components: { tabbar },
   data () {
