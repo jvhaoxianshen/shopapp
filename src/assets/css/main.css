@@ -1,0 +1,12 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+li {
+  list-style: none;
+}
+/*容器高度*/
+.container {
+  height: 100%;
+}

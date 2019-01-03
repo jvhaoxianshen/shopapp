@@ -1,12 +1,11 @@
 <template>
-  <div>
+  <div class="container">
     <!-- <container></container> -->
     <tabbar :selected="selected" :tabs="tabs"></tabbar>
   </div>
 </template>
 
 <script>
-// import container from '../common/Container'// 容器区
 import tabbar from '../common/Tabbar'// 底部菜单切换区
 export default {
   components: { tabbar },
@@ -22,6 +21,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

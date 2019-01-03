@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="container">
     <!-- 内容容器区开始 -->
-    <mt-tab-container v-model="message" style="padding-bottom: 3rem;" :swipeable="true" >
+    <mt-tab-container v-model="message" :swipeable="true" class="container">
       <mt-tab-container-item id="home">
         <mt-cell v-for="n in 20" title="tab-container 1" :key="n">{{n}}</mt-cell>
       </mt-tab-container-item>
       <mt-tab-container-item id="product">
-        <mt-cell v-for="n in 5" title="tab-container 2" :key="n"></mt-cell>
+        <productList></productList>
       </mt-tab-container-item>
       <mt-tab-container-item id="shopcar">
         <mt-cell v-for="n in 7" title="tab-container 3" :key="n"></mt-cell>
@@ -40,12 +40,14 @@
 </template>
 
 <script>
+import productList from '../product/ProductList'
 export default {
+  components: { productList },
   data () {
     return {
-      message: this.selected,
-      atabs: this.tabs,
-      swipeable: true
+      message: this.selected, // 选中的页面
+      atabs: this.tabs, // 选中的图标
+      swipeable: true // 是否支持左右滑动标志
     }
   },
   props: {
@@ -87,6 +89,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style >
+.mint-tab-container-wrap {
+  height: 100%;
+}
 </style>
