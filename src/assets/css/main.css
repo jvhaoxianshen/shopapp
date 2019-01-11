@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 html,body {
   margin: 0;
   padding: 0;
@@ -9,4 +13,24 @@ li {
 /*容器高度*/
 .container {
   height: 100%;
+}
+.mint-swipe-indicator {
+  background: #ccc;
+}
+.mint-swipe-indicator.is-active {
+  background: blue;
+}
+
+ /**
+ * 搜索区样式
+ */
+.mint-searchbar {
+  background-color: #FFFFFF;
+}
+.mint-searchbar-inner {
+  border-radius: 20px;
+  background-color: #f3f3f3;
+}
+.mint-searchbar-core {
+  background-color: #f3f3f3;
 }

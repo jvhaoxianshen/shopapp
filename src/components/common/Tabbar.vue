@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 内容容器区开始 -->
-    <mt-tab-container v-model="message" :swipeable="true" class="container">
+    <mt-tab-container v-model="message" class="container">
       <mt-tab-container-item id="home">
         <mt-cell v-for="n in 20" title="tab-container 1" :key="n">{{n}}</mt-cell>
       </mt-tab-container-item>

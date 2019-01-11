@@ -8,7 +8,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/dist',
       name: 'Home',
       component: Home,
       meta: {
@@ -16,11 +16,11 @@ export default new Router({
       }
     },
     {
-      path: '/ProductDeatils',
+      path: '/dist/:productId',
       name: 'ProductDeatils',
       component: ProductDeatils,
       meta: {
-        keepAlive: true // 需要被缓存
+        keepAlive: false // 需要被缓存
       }
     }
   ]
