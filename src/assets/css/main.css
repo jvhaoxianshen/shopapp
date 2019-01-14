@@ -1,11 +1,14 @@
+/* 公共样式设置 */
 * {
   margin: 0;
   padding: 0;
+  box-sizing:border-box;
+  -webkit-box-sizing:border-box; /* Safari */
 }
 html,body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  overflow-x: hidden;
 }
 li {
   list-style: none;

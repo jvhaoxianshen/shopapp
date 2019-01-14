@@ -8,6 +8,7 @@
     <!-- 头部导航栏结束 -->
     <!-- 内容区区开始 -->
     <div class="container-mid">
+      <!-- 轮播图区开始 -->
       <div class="swipe-container">
         <mt-swipe :auto="3000">
           <mt-swipe-item v-for="(val) in productDetail.proPic" :key="val.picId">
@@ -15,8 +16,58 @@
           </mt-swipe-item>
         </mt-swipe>
       </div>
+      <!-- 轮播图区结束 -->
+      <!-- 产品标题区开始 -->
+      <div class="product-title">
+        <p class="product-name-container">
+          <span class="product-ziyinflag">自营</span>
+          <span class="product-name" v-cloak>{{productDetail.productName}}</span>
+        </p>
+        <p class="product-price" v-cloak>{{'￥' + productDetail.productPrice}}</p>
+        <p class="product-info">
+          <span>邮费：0</span>
+          <span v-cloak>{{'库存：' + productDetail.productNum}}</span>
+          <span>出产地：浙江杭州</span>
+        </p>
+      </div>
+      <!-- 产品标题区结束 -->
+      <!-- 产品介绍区一开始 -->
+      <div class="product-introduction-one">
+        <li>
+          <img src="../../assets/icon/productDetail/yanfa.svg" alt="">
+          <p>权威研发</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/productDetail/jianyan.svg" alt="">
+          <p>层层检测</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/productDetail/qvdao.svg" alt="">
+          <p>唯一渠道</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/productDetail/pinzhi.svg" alt="">
+          <p>品质保证</p>
+        </li>
+      </div>
+      <!-- 产品介绍区一结束 -->
+      <!-- 产品介绍区二开始 -->
+      <div class="product-introduction-two">
+        <img src="../../assets/img/productIntroduction/ddw_jiesao.jpg" alt="">
+      </div>
+      <!-- 产品介绍区二结束 -->
     </div>
     <!-- 内容区结束 -->
+    <!-- 底部按钮开始 -->
+    <div class="footer-container">
+      <li class="footer-kefu">
+        <img src="../../assets/icon/productDetail/kefu.svg" alt="">
+        <p>客服</p>
+      </li>
+      <li  class="footer-addshopcar">加入购物车</li>
+      <li class="footer-buy">立即购买</li>
+    </div>
+    <!-- 底部按钮结束 -->
   </div>
 </template>
 
@@ -68,7 +119,7 @@ export default {
   /* 产品介绍区容器样式 */
   .container-mid {
     height: 100%;
-    margin-top: 40px;
+    padding-top: 40px;
     background-color: #F3F3F3;
   }
   /* 轮播图容器样式 */
@@ -78,5 +129,111 @@ export default {
   }
   .swipe-container img {
     width: 90%;
+  }
+  /* 产品标题区样式（包含产品价格，邮费，出产地等） */
+  .product-title {
+    width: 100%;
+    height: 9rem;
+    background-color: #FFFFFF;
+    margin-top: 0.8rem;
+    padding: 1.6rem 1rem;
+  }
+  .product-name-container {
+    text-align: left
+  }
+  /* 自营标识样式 */
+  .product-ziyinflag {
+    width: 2.3rem;
+    height: 1.3rem;
+    line-height: 1.4rem;
+    display: inline-block;
+    text-align: center;
+    background-color: red;
+    color: #FFFFFF;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+  .product-name {
+    font-size: 18px;
+    color: #7c7c6c;
+    margin-left: 0.5rem;
+  }
+  .product-price {
+    margin-top: 1rem;
+    text-align: left;
+    color: red;
+  }
+  .product-info {
+    text-align: left;
+    color: #7c7c7c;
+    font-size: 13px;
+    margin-top: 1rem;
+  }
+  .product-info span {
+    margin-right: 1.8rem;
+  }
+  /* 产品介绍区一样式 */
+  .product-introduction-one {
+    height: 5rem;
+    width: 100%;
+    background-color: #FFFFFF;
+    margin-top: 0.8rem;
+    padding: 0.8rem 0 0.5rem;
+  }
+  .product-introduction-one li {
+    width: 25%;
+    height: 100%;
+    float: left;
+  }
+  .product-introduction-one li img {
+    height: 50%;
+  }
+  .product-introduction-one li p {
+    color: #7C7C6C;
+    font-size: 13px;
+    margin-top: 0.4rem;
+  }
+  /* 产品介绍区二样式 */
+  .product-introduction-two {
+    margin: 0.8rem 0 3.5rem;
+  }
+  .product-introduction-two img {
+    width: 100%;
+  }
+  /* 底部样式 */
+  .footer-container {
+    height: 3.3rem;
+    width: 100%;
+    background-color: #FFFFFF;
+    position: fixed;
+    bottom: 0;
+  }
+  .footer-container li {
+    float: left;
+    text-align: center;
+    line-height: 3.3rem;
+  }
+  .footer-container .footer-kefu {
+    width: 30%;
+    line-height: 1.2rem;
+  }
+  .footer-container .footer-kefu img {
+    width: 1.3rem;
+    margin-top: 0.3rem;
+  }
+  .footer-container .footer-kefu p {
+    font-size: 14px;
+    color: #7c7c7c;
+  }
+  .footer-container .footer-addshopcar {
+    width: 35%;
+    background-color: #00BFFF;
+    opacity: 0.8;
+    color: #FFFFFF;
+  }
+  .footer-container .footer-buy {
+    width: 35%;
+    background-color: #00BFFF;
+    color: #FFFFFF;
   }
 </style>

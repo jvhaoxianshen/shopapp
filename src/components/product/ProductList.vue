@@ -20,7 +20,8 @@ export default {
   data () {
     return {
       searchValue: '', // 搜索内容
-      productList: [] // 产品列表数据
+      productList: [], // 产品列表数据
+      scrollTop: ''
     }
   },
   created: function () {
@@ -29,38 +30,32 @@ export default {
   methods: {
     // 进入产品详情页面
     go: function (productId) {
-      this.$nextTick(function () {
-        console.log(this.$refs.mid.scrollTop)
+      this.$nextTick(() => {
+        // 进入之前页面记录滚动条位置
+        this.scrollTop = this.$refs.mid.scrollTop
       })
-      // this.$router.push({name: 'ProductDeatils', params: {productId: productId}})
+      this.$router.push({name: 'ProductDeatils', params: {productId: productId}})
     },
     // 获取产品列表数据
     getProductList: function () {
-      this.$nextTick(function () {
-        console.log(this.$refs.mid.scrollTop)
-      })
       this.axios.post('water/product/list')
         .then(res => {
           res.data.forEach((val, index) => {
-            console.log('../../assets' + val.productInfo)
             res.data[index].productInfo = require('../../assets' + val.productInfo)
           })
           this.productList = res.data
         })
     }
   },
-  // 在页面离开时记录滚动位置
-  beforeRouteLeave (to, from, next) {
-    this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    console.log(this.scrollTop)
-    // next()
-  },
-  // 进入该页面时，用之前保存的滚动位置赋值
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      console.log(this.scrollTop)
-      document.body.scrollTop = vm.scrollTop
-    })
+  watch: {
+    $route (to, from) {
+      // 从其他页面进入该页面滚动条返回之前位置
+      if (from.name === 'ProductDeatils') {
+        this.$nextTick(() => {
+          this.$refs.mid.scrollTop = this.scrollTop
+        })
+      }
+    }
   }
 }
 </script>

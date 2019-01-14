@@ -23,5 +23,6 @@ export default {
   height: 100%;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-overflow-scrolling: touch;
 }
 </style>
