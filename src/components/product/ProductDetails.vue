@@ -1,5 +1,15 @@
 <template>
   <div class="container">
+    <!-- 加载样式开始 -->
+    <transition name="slide-fade">
+      <loadingPage v-if="loaderShow"></loadingPage>
+    </transition>
+    <!-- 加载样式结束 -->
+    <!-- 选择商品数量样式开始 -->
+    <transition name="slide-fade">
+      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow"></seclectProductNum>
+    </transition>
+    <!-- 选择商品数量样式结束 -->
     <!-- 头部导航栏开始 -->
     <mt-header title="商品详情" fixed>
       <mt-button icon="back" slot="left" @click="back"></mt-button>
@@ -64,7 +74,7 @@
         <img src="../../assets/icon/productDetail/kefu.svg" alt="">
         <p>客服</p>
       </li>
-      <li  class="footer-addshopcar">加入购物车</li>
+      <li  class="footer-addshopcar" @click="addShopcar">加入购物车</li>
       <li class="footer-buy">立即购买</li>
     </div>
     <!-- 底部按钮结束 -->
@@ -72,10 +82,15 @@
 </template>
 
 <script>
+import loadingPage from '../common/LoadingPage' // 加载样式
+import seclectProductNum from './SeclectProductNum' // 选择商品数量样式
 export default {
+  components: {loadingPage, seclectProductNum},
   data () {
     return {
-      productDetail: {}
+      productDetail: {}, // 商品数据
+      loaderShow: true, // 加载样式
+      setNumShow: false // 点击加入购物或立即购买弹出选择数量样式
     }
   },
   created: function () {
@@ -99,13 +114,41 @@ export default {
             res.data[0].proPic[index].pic = require('../../assets' + val.pic) // context(val.pic)
           })
           this.productDetail = res.data[0]
+          setTimeout(() => {
+            this.loaderShow = false
+          }, 800)
         })
+    },
+    // 加入购物车事件
+    addShopcar: function () {
+      this.openSetNumWindow()
+    },
+    // 关闭数量设置框样式
+    closeSetNumWindow: function () {
+      this.setNumShow = false
+    },
+    // 打开数量设置框
+    openSetNumWindow: function () {
+      this.setNumShow = true
     }
   }
 }
 </script>
 
 <style scoped>
+  /* 可以设置不同的进入和离开动画 */
+  /* 设置持续时间和动画函数 */
+  .slide-fade-enter-active {
+    transition: all .5s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+    transform: translateY(700px);
+    opacity: 0;
+  }
   /* 组件最外层容器样式 */
   .container {
     height: 100%;

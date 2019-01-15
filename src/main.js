@@ -7,7 +7,7 @@ import router from './router'
 // import MintUI from 'mint-ui'
 import './assets/css/main.css'
 import './assets/css/my-mint.scss'
-import { Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
+import { Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
 
 // 配置axios
 import Qs from 'qs'
@@ -37,6 +37,7 @@ Vue.component(Header.name, Header) // 顶部组件
 Vue.component(Button.name, Button) // 按钮组件
 Vue.component(Swipe.name, Swipe) // 轮播图样式
 Vue.component(SwipeItem.name, SwipeItem) // 轮播图样式
+Vue.component(Spinner.name, Spinner) // 加载样式
 // Vue.use(MintUI)
 /* eslint-disable no-new */
 new Vue({
