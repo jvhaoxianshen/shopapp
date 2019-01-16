@@ -6,8 +6,11 @@
     </transition>
     <!-- 加载样式结束 -->
     <!-- 选择商品数量样式开始 -->
+    <transition name="gradual">
+      <maskLayer  v-if="setNumShow"></maskLayer>
+    </transition>
     <transition name="slide-fade">
-      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow"></seclectProductNum>
+      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow" :productDetail="productDetail" @toClose="closeSetNumWindow"></seclectProductNum>
     </transition>
     <!-- 选择商品数量样式结束 -->
     <!-- 头部导航栏开始 -->
@@ -84,8 +87,9 @@
 <script>
 import loadingPage from '../common/LoadingPage' // 加载样式
 import seclectProductNum from './SeclectProductNum' // 选择商品数量样式
+import maskLayer from './MaskLayer' // 遮罩层
 export default {
-  components: {loadingPage, seclectProductNum},
+  components: {loadingPage, seclectProductNum, maskLayer},
   data () {
     return {
       productDetail: {}, // 商品数据
@@ -142,11 +146,17 @@ export default {
     transition: all .5s ease;
   }
   .slide-fade-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-  .slide-fade-enter, .slide-fade-leave-to
-  /* .slide-fade-leave-active for below version 2.1.8 */ {
+  .slide-fade-enter, .slide-fade-leave-to {
     transform: translateY(700px);
+    opacity: 0;
+  }
+  /* 颜色渐变动画 */
+  .gradual-enter-active, .gradual-leave-active {
+    transition: opacity .8s;
+  }
+  .gradual-enter, .gradual-leave-to {
     opacity: 0;
   }
   /* 组件最外层容器样式 */
