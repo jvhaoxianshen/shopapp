@@ -78,7 +78,7 @@
         <p>客服</p>
       </li>
       <li  class="footer-addshopcar" @click="addShopcar">加入购物车</li>
-      <li class="footer-buy">立即购买</li>
+      <li class="footer-buy"  @click="buyNow">立即购买</li>
     </div>
     <!-- 底部按钮结束 -->
   </div>
@@ -125,6 +125,10 @@ export default {
     },
     // 加入购物车事件
     addShopcar: function () {
+      this.openSetNumWindow()
+    },
+    // 立即购买事件
+    buyNow: function () {
       this.openSetNumWindow()
     },
     // 关闭数量设置框样式
@@ -255,7 +259,7 @@ export default {
   }
   /* 底部样式 */
   .footer-container {
-    height: 3.3rem;
+    height: 3.4rem;
     width: 100%;
     background-color: #FFFFFF;
     position: fixed;
@@ -264,7 +268,7 @@ export default {
   .footer-container li {
     float: left;
     text-align: center;
-    line-height: 3.3rem;
+    line-height: 3.4rem;
   }
   .footer-container .footer-kefu {
     width: 30%;

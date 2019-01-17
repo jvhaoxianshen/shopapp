@@ -14,20 +14,25 @@
       <p class="product-name">{{ proData.productName}}</p>
     </div>
     <!-- 产品介绍区结束 -->
-    <!-- 修改数量区开始 -->
-    <div class="product-setnumcontainer">
+    <!-- 修改数量按钮区开始 -->
+    <div class="product-setnumcontainer" @touchstart="down" @touchmove="move" @touchend="end" ref="box" >
       <span>购买数量</span>
       <div class="product-setnumicon">
-        <div class="posit posit-jian">
+        <div class="posit posit-jian" @click="jiannums">
           <div class="posit-jianicon"></div>
         </div>
         <div class="posit posit-num">{{nums}}</div>
-        <div class="posit posit-add">
+        <div class="posit posit-add" @click="addnums">
           <div class="posit-addicon"></div>
         </div>
       </div>
     </div>
-    <!-- 修改数量区结束 -->
+    <!-- 修改数量按钮区结束 -->
+    <!-- 底部按钮区开始 -->
+    <div class="footer-container">
+      <div class="confirm-btn">确定</div>
+    </div>
+    <!-- 底部按钮区结束 -->
   </div>
   <!-- 修改数量区结束 -->
 </div>
@@ -39,15 +44,24 @@ export default {
     return {
       show: this.setNumShow, // 是否显示
       proData: this.productDetail, // 商品数据
-      nums: 0 // 商品数量
+      nums: 1, // 商品数量
+      position: {
+        x: 0,
+        y: 0
+      },
+      nx: '',
+      ny: '', // 当前位置
+      dx: '',
+      dy: '', // 原始位置
+      xPum: '',
+      yPum: '', // 最终位置
+      flags: false,
+      status: false
     }
   },
   props: {
     setNumShow: Boolean,
     productDetail: Object
-  },
-  created: function () {
-    console.log(this.proData.proPic[0])
   },
   methods: {
     // 关闭数量设置框样式
@@ -57,6 +71,65 @@ export default {
     // 打开数量设置框
     openSetNumWindow: function () {
       this.show = true
+    },
+    // 增加数量
+    addnums: function () {
+      if (this.nums >= 3) {
+        this.$toast('购买数量不能超过3')
+        return
+      }
+      this.nums++
+    },
+    // 减少数量
+    jiannums: function () {
+      if (this.nums <= 1) {
+        this.$toast('购买数量不能低于1')
+        return
+      }
+      this.nums--
+    },
+    down: function () {
+      this.flags = true
+      var touch
+      if (event.touches) {
+        touch = event.touches[0]
+      } else {
+        touch = event
+      }
+      this.position.y = touch.clientY // 触摸点位置
+      this.dy = this.$refs.box.offsetTop // 记录位置
+      console.log(this.dy)
+    },
+    move: function () {
+      if (this.flags) {
+        var touch
+        if (event.touches) {
+          touch = event.touches[0]
+        } else {
+          touch = event
+        }
+        this.ny = touch.clientY - this.position.y
+        this.yPum = this.dy + this.ny
+        this.$refs.box.style.top = this.yPum + 'px'
+        if (this.yPum < this.dy) {
+          this.status = true
+        } else {
+          this.status = false
+        }
+        // 阻止页面的滑动默认事件
+        document.addEventListener('touchmove', function () {
+          event.preventDefault()
+        }, false)
+      }
+    },
+    end: function () {
+      if (!this.status) {
+        this.$refs.box.style.top = '9rem'
+        this.status = true
+      } else {
+        this.$refs.box.style.top = '6.5rem'
+        this.status = false
+      }
     }
   }
 }
@@ -125,7 +198,7 @@ export default {
 }
 /* 产品调整数量区样式 */
 .product-setnumcontainer {
-    width: 100%;
+    width: 90%;
     line-height: 4rem;
     margin-top: 1rem;
     text-align: left;
@@ -133,6 +206,11 @@ export default {
     border-bottom: 1px solid #ECECEC;
     color: #333333;
     font-size: 14px;
+    position: absolute;
+    margin-right: 1rem;
+    left: 0;
+    margin-left: 1rem;
+    top: 6.5rem;
 }
 /* 设置数量样式 */
 .product-setnumicon {
@@ -184,5 +262,22 @@ export default {
   width: 0.7rem;
   margin-top: 0.25rem;
   margin-left: 0.4rem;
+}
+/* 底部样式 */
+.footer-container {
+  width: 100%;
+  height: 4.5rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 1rem ;
+}
+.confirm-btn {
+  width: 100%;
+  height: 2.5rem;
+  background-color: #00BFFF;
+  border-radius: 15px;
+  line-height: 2.5rem;
+  color: #FFFFFF;
 }
 </style>
