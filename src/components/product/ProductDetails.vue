@@ -112,7 +112,6 @@ export default {
       }
       this.axios.post('water/product/info', data)
         .then(res => {
-          console.log(res.data)
           res.data[0].proPic.forEach((val, index) => {
             // var context = require.context('../../assets', true, /\.jpg$/) console.log(context.keys())
             res.data[0].proPic[index].pic = require('../../assets' + val.pic) // context(val.pic)
@@ -120,7 +119,7 @@ export default {
           this.productDetail = res.data[0]
           setTimeout(() => {
             this.loaderShow = false
-          }, 800)
+          }, 500)
         })
     },
     // 加入购物车事件

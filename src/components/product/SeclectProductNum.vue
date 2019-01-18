@@ -8,21 +8,23 @@
     <img src="../../assets/icon/productDetail/close.svg" alt="" class="close-icon" @click="closeSetNumWindow">
     <!-- 产品介绍区开始 -->
     <div class="product-container">
-      <img :src="proData.proPic[0].pic" alt="">
-      <p class="product-price">{{'￥' + proData.productPrice}}</p>
-       <p class="product-num">{{'库存' + proData.productNum}}</p>
-      <p class="product-name">{{ proData.productName}}</p>
+      <transition>
+        <img :src="proData.proPic[0].pic" alt="" v-bind:class="{ bigimg: isActive }">
+      </transition>
+      <span class="product-price" v-bind:class="{ pstyle: isActive, pfirst:isActive, pleft:isleft }">{{'￥' + proData.productPrice}}</span>
+      <span class="product-num" v-bind:class="{ pstyle: isActive, pleft:isleft}">{{'库存' + proData.productNum}}</span>
+      <span class="product-name" v-bind:class="{ pstyle: isActive, pleft:isleft }">{{ proData.productName}}</span>
     </div>
     <!-- 产品介绍区结束 -->
     <!-- 修改数量按钮区开始 -->
     <div class="product-setnumcontainer" @touchstart="down" @touchmove="move" @touchend="end" ref="box" >
-      <span>购买数量</span>
-      <div class="product-setnumicon">
-        <div class="posit posit-jian" @click="jiannums">
+      <span @touchend.stop="">购买数量</span>
+      <div class="product-setnumicon" @touchend.stop="">
+        <div class="posit posit-jian" @touchend="jiannums">
           <div class="posit-jianicon"></div>
         </div>
         <div class="posit posit-num">{{nums}}</div>
-        <div class="posit posit-add" @click="addnums">
+        <div class="posit posit-add" @touchend="addnums">
           <div class="posit-addicon"></div>
         </div>
       </div>
@@ -56,7 +58,9 @@ export default {
       xPum: '',
       yPum: '', // 最终位置
       flags: false,
-      status: false
+      status: false,
+      isActive: false,
+      isleft: false
     }
   },
   props: {
@@ -98,7 +102,6 @@ export default {
       }
       this.position.y = touch.clientY // 触摸点位置
       this.dy = this.$refs.box.offsetTop // 记录位置
-      console.log(this.dy)
     },
     move: function () {
       if (this.flags) {
@@ -113,6 +116,7 @@ export default {
         this.$refs.box.style.top = this.yPum + 'px'
         if (this.yPum < this.dy) {
           this.status = true
+          this.isActive = false
         } else {
           this.status = false
         }
@@ -124,11 +128,20 @@ export default {
     },
     end: function () {
       if (!this.status) {
-        this.$refs.box.style.top = '9rem'
+        this.$refs.box.style.top = '17rem'
+        this.isActive = true
+        this.isleft = false
         this.status = true
+        setTimeout(() => {
+          this.isleft = true
+        }, 500)
       } else {
         this.$refs.box.style.top = '6.5rem'
         this.status = false
+        this.isActive = false
+        setTimeout(() => {
+          this.isleft = false
+        }, 500)
       }
     }
   }
@@ -162,11 +175,13 @@ export default {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   padding: 1rem;
+  overflow: hidden;
 }
 /* 关闭按钮样式 */
 .close-icon {
   width: 1.6rem;
-  float: right;
+  position: absolute;
+  right: 1rem;
   z-index: 9999;
 }
 /* 产品简介区开始 */
@@ -174,18 +189,47 @@ export default {
   width: calc(100% - 2rem);
   width: -webkit-calc(100% - 2rem);
   height: 6rem;
+  z-index: 99;
+  position: absolute;
+  background-color: #FFFFFF;
 }
 .product-container img {
   width: 6rem;
-  float: left;
+  position: absolute;
+  left: 0;
+  transition: all 0.8s ;
 }
-.product-container p {
+.product-container .bigimg {
+  /* 产品图片放大 */
+  width: 12rem;
+  position: absolute;
+  left: calc((100% - 10.5rem)/2);
+  transition: all 1.9s;
+}
+.bigimg-leave-active {
+  position: absolute;
+}
+.product-container span {
+  line-height: 1.2rem;
+  transition: all 1s;
   padding-left: 6.3rem;
   text-align: left;
-  line-height: 1.2rem;
+  display: block;
+}
+.product-container .pstyle {
+  line-height: 1.5rem;
+  transition: all 0.8s;
+}
+.product-container .pleft {
+  text-align: center;
+  padding-left: 0;
+}
+.product-container .pfirst {
+  margin-top: 10rem;
+  transition: all 0.8s;
 }
 .product-price {
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   color: red;
 }
 .product-num {
@@ -198,19 +242,21 @@ export default {
 }
 /* 产品调整数量区样式 */
 .product-setnumcontainer {
-    width: 90%;
-    line-height: 4rem;
-    margin-top: 1rem;
-    text-align: left;
-    border-top: 1px solid #ECECEC;
-    border-bottom: 1px solid #ECECEC;
-    color: #333333;
-    font-size: 14px;
-    position: absolute;
-    margin-right: 1rem;
-    left: 0;
-    margin-left: 1rem;
-    top: 6.5rem;
+  width: 90%;
+  line-height: 4rem;
+  margin-top: 1rem;
+  text-align: left;
+  border-top: 1px solid #ECECEC;
+  /* border-bottom: 1px solid #ECECEC; */
+  color: #333333;
+  font-size: 14px;
+  position: absolute;
+  margin-right: 1rem;
+  left: 0;
+  margin-left: 1rem;
+  top: 6.5rem;
+  height: 70%;
+  transition: all 0.8s  ;
 }
 /* 设置数量样式 */
 .product-setnumicon {
