@@ -7,11 +7,13 @@ import router from './router'
 // import MintUI from 'mint-ui'
 import './assets/css/main.css'
 import './assets/css/my-mint.scss'
-import { Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
+import { Checklist, Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
 // 配置axios
 import Qs from 'qs'
 import axios from 'axios' // 导入axios
 import VueAxios from 'vue-axios'
+import Vuex from 'vuex' // 导入vuex包
+
 var axiosInstance = axios.create({
   // baseURL: 'http://192.168.0.33:8088/shopApp-WXPage/', // 开发环境
   // baseURL: 'http://120.26.209.236:80/shopApp-WXPage/', //生产环境
@@ -38,11 +40,21 @@ Vue.component(Swipe.name, Swipe) // 轮播图样式
 Vue.component(SwipeItem.name, SwipeItem) // 轮播图样式
 Vue.component(Spinner.name, Spinner) // 加载样式
 Vue.prototype.$toast = Toast // 提示框样式
+Vue.component(Checklist.name, Checklist) // 选择框样式
 // Vue.use(MintUI)
 /* eslint-disable no-new */
+Vue.use(Vuex)
+
+var store = new Vuex.Store({
+  state: {
+  },
+  mutations: {}
+})
+
 new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store: store
 })

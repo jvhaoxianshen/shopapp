@@ -220,10 +220,10 @@ export default {
   line-height: 1.5rem;
   transition: all 0.8s;
 }
-.product-container .pleft {
+/* .product-container .pleft {
   text-align: center;
   padding-left: 0;
-}
+} */
 .product-container .pfirst {
   margin-top: 10rem;
   transition: all 0.8s;

@@ -16,7 +16,7 @@
     <!-- 头部导航栏开始 -->
     <mt-header title="商品详情" fixed>
       <mt-button icon="back" slot="left" @click="back"></mt-button>
-      <mt-button class="shopcar-but" slot="right"></mt-button>
+      <mt-button class="shopcar-but" slot="right" @click="goShopCar"></mt-button>
     </mt-header>
     <!-- 头部导航栏结束 -->
     <!-- 内容区区开始 -->
@@ -104,6 +104,10 @@ export default {
     // 返回上一页事件
     back: function () {
       this.$router.back()
+    },
+    // 进入购物车
+    goShopCar: function () {
+      this.$router.push({name: 'ShopCar'})
     },
     // 获取商品详情事件
     getProductDetail: function () {
