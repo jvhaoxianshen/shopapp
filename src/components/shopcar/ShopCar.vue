@@ -8,26 +8,26 @@
   <!-- 头部导航栏结束 -->
   <!-- 购物车商品区开始 -->
   <div class="mid-container">
-    <li class="shopcar-product">
+    <li class="shopcar-product" v-for="(val, index) in productList" :key="val.shopCarId">
       <!-- 单选框区开始 -->
       <div class="check-box">
-        <checkBox></checkBox>
+        <checkBox :boxSelected="val.selected" :index="index"></checkBox>
       </div>
       <!-- 单选框区结束 -->
       <!-- 图片区开始 -->
       <div class="pic-container">
-        <img src="../../../dist/static/img/pro1-1.73f3c81.jpg" alt="">
+        <img :src="val.product.productInfo" alt="">
       </div>
       <!-- 图片区结束 -->
       <!-- 商品信息和数量区域开始 -->
       <div class="product-info">
-        <p>纯净水（氘含量50ppm）12瓶/箱</p>
-        <span class="product-pice">￥1536</span>
+        <p>{{val.product.productName}}</p>
+        <span class="product-pice">{{'￥' + val.product.productPrice}}</span>
         <!-- 数量调整区开始 -->
         <div class="product-nums">
-          <span class="num-set">-</span>
-          <span class="num">10</span>
-          <span class="num-set num-set-add">+</span>
+          <span class="num-set" @click="subtractProductNums(index)">-</span>
+          <span class="num">{{val.buyNum}}</span>
+          <span class="num-set num-set-add" @click="addProductNums(index)">+</span>
         </div>
         <!-- 数量调整区结束 -->
       </div>
@@ -35,6 +35,19 @@
     </li>
   </div>
   <!-- 购物车商品区结束 -->
+  <!-- 底部菜单栏开始 -->
+  <div class="footer-container">
+    <div class="generate-but">生成订单</div>
+    <div class="total-money">
+      <span>总计：</span>
+      <span class="money">{{'￥' + this.$store.getters.getTotalMoney }}</span>
+    </div>
+    <div class="all-check">
+      <checkBox class="all-check-box"></checkBox>
+      <span>全选</span>
+    </div>
+  </div>
+  <!-- 底部菜单栏结束 -->
 </div>
 </template>
 
@@ -44,12 +57,80 @@ export default {
   components: {checkBox},
   data () {
     return {
+      productList: [] // 商品信息
     }
+  },
+  created: function () {
+    this.getShopcar()
   },
   methods: {
     // 返回上一页事件
     back: function () {
       this.$router.back()
+    },
+    // 获取购物车的数据
+    getShopcar: function () {
+      let data = {
+        custId: this.$store.getters.getOpenid
+      }
+      this.axios.post('water/shopCar/list', data)
+        .then(res => {
+          console.log(res)
+          res.data.forEach((val, index) => {
+            res.data[index].product.productInfo = require('../../assets' + val.product.productInfo)
+            res.data[index].selected = false
+          })
+          this.productList = res.data
+          this.$store.commit('initializeShopCarProduct', res.data)
+        })
+    },
+    // 添加商品数量
+    addProductNums: function (index) {
+      if (parseInt(this.productList[index].buyNum) === 3) {
+        this.$toast('亲，购买的产品数量不能大于3哦')
+        return
+      }
+      this.updateData(index, 'add')
+    },
+    // 减少商品数量
+    subtractProductNums: function (index) {
+      if (parseInt(this.productList[index].buyNum) === 1) {
+        this.$toast('亲，购买的产品数量不能小于1哦')
+        return
+      }
+      this.updateData(index, 'sub')
+    },
+    // 购物车数据同步到数据库(index代表哪个商品，ways代表增加还是减少)
+    updateData: function (index, ways) {
+      let data = {}
+      if (ways === 'add') {
+        data = {
+          shopCarId: this.productList[index].shopCarId,
+          num: parseInt(this.productList[index].buyNum) + 1
+        }
+      } else if (ways === 'sub') {
+        data = {
+          shopCarId: this.productList[index].shopCarId,
+          num: parseInt(this.productList[index].buyNum) - 1
+        }
+      }
+      this.axios.post('water/shopCar/num', data)
+        .then(() => {
+          if (ways === 'add') {
+            this.productList[index].buyNum = parseInt(this.productList[index].buyNum) + 1
+          } else if (ways === 'sub') {
+            this.productList[index].buyNum = parseInt(this.productList[index].buyNum) - 1
+          }
+          this.$toast('操作成功')
+        })
+        .catch(() => {
+          this.$toast('服务器开小差了')
+        })
+    },
+    // 是否选中
+    isSelected: function (index) {
+      alert(111)
+      this.productList[parseInt(index)].selected = !this.productList[parseInt(index)].selected
     }
   }
 }
@@ -57,8 +138,8 @@ export default {
 
 <style scoped>
 .mid-container {
-  height: 100%;
   padding-top: 40px;
+  padding-bottom: 4rem;
 }
 /* 购物车商品区 */
 .shopcar-product {
@@ -127,5 +208,39 @@ export default {
 .product-nums .num-set-add {
   font-size: 20px;
   padding: 0.2rem 0 0rem;
+}
+/* 底部样式 */
+.footer-container {
+  background-color: #FFFFFF;
+  position: fixed;
+  height: 4rem;
+  width: 100%;
+  bottom: 0;
+}
+.footer-container div {
+  width: 35%;
+  float: right;
+  line-height: 4rem;
+}
+/* 结算按钮 */
+.generate-but {
+  background-color: #00BFFF;
+  color: #FFFFFF;
+}
+.generate-but {
+  text-align: center;
+}
+.money {
+  color: red;
+}
+.footer-container .all-check {
+  line-height: 4rem;
+  height: 4rem;
+  width: 30%;
+  position: relative;
+}
+.all-check-box {
+  position: absolute;
+  left: 0rem;
 }
 </style>

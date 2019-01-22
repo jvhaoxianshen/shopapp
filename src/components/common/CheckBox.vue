@@ -14,9 +14,20 @@ export default {
       selected: false
     }
   },
+  props: {
+    index: Number
+  },
+  created: function () {
+    if (this.index === undefined || this.index === '') {
+      return ''
+    } else {
+      this.selected = this.$store.getters.getselected(this.index)
+    }
+  },
   methods: {
     show: function () {
       this.selected = !this.selected
+      this.$store.commit('changeSelected', this.index)
     }
   }
 }

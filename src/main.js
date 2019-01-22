@@ -47,8 +47,43 @@ Vue.use(Vuex)
 
 var store = new Vuex.Store({
   state: {
+    openid: 'o5exH1Byk1cPaCPQ0UZAKfTkA1Co', // 用户id
+    shopCarProduct: [], // 购物车商品数据
+    totalMoney: 0 // 总计金额
   },
-  mutations: {}
+  mutations: {
+    // this.$store.commit('方法名称','按需传参数')
+    // 点击加入购物车
+    addToCar (state, productInfo) {
+    },
+    // 初始化购物车数据
+    initializeShopCarProduct (state, data) {
+      state.shopCarProduct = data
+    },
+    // 改变选中状态
+    changeSelected (state, index) {
+      state.shopCarProduct[index].selected = !state.shopCarProduct[index].selected
+    }
+  },
+  getters: {
+    getOpenid: function (state) {
+      return state.openid
+    },
+    getselected: (state) => (index) => {
+      // 获取当前商品选中状态
+      return state.shopCarProduct[index].selected
+    },
+    getTotalMoney: (state) => {
+      // 获取选中商品总计
+      state.totalMoney = 0
+      state.shopCarProduct.forEach((val, index) => {
+        if (val.selected) {
+          state.totalMoney += parseInt(val.product.productPrice) * parseInt(val.buyNum)
+        }
+      })
+      return state.totalMoney
+    }
+  }
 })
 
 new Vue({
