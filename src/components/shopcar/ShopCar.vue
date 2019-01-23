@@ -11,7 +11,7 @@
     <li class="shopcar-product" v-for="(val, index) in productList" :key="val.shopCarId">
       <!-- 单选框区开始 -->
       <div class="check-box">
-        <checkBox :boxSelected="val.selected" :index="index"></checkBox>
+        <checkBox :index="index"></checkBox>
       </div>
       <!-- 单选框区结束 -->
       <!-- 图片区开始 -->
@@ -43,7 +43,7 @@
       <span class="money">{{'￥' + this.$store.getters.getTotalMoney }}</span>
     </div>
     <div class="all-check">
-      <checkBox class="all-check-box"></checkBox>
+      <checkBox class="all-check-box"  :index="-1"></checkBox>
       <span>全选</span>
     </div>
   </div>

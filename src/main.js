@@ -49,7 +49,8 @@ var store = new Vuex.Store({
   state: {
     openid: 'o5exH1Byk1cPaCPQ0UZAKfTkA1Co', // 用户id
     shopCarProduct: [], // 购物车商品数据
-    totalMoney: 0 // 总计金额
+    totalMoney: 0, // 总计金额
+    allSelected: false // 全选状态
   },
   mutations: {
     // this.$store.commit('方法名称','按需传参数')
@@ -63,6 +64,36 @@ var store = new Vuex.Store({
     // 改变选中状态
     changeSelected (state, index) {
       state.shopCarProduct[index].selected = !state.shopCarProduct[index].selected
+    },
+    // 改变全选状态
+    changeAllSelected (state) {
+      state.allSelected = !state.allSelected
+      var productObj
+      state.shopCarProduct.forEach((val, index) => {
+        if (state.allSelected) {
+          productObj = {}
+          state.shopCarProduct[index] = null
+          productObj.buyNum = val.buyNum
+          productObj.addDate = val.addDate
+          productObj.custId = val.custId
+          productObj.product = val.product
+          productObj.productId = val.productId
+          productObj.shopCarId = val.shopCarId + '*true'
+          productObj.selected = state.allSelected
+          Vue.set(state.shopCarProduct, index, productObj)
+        } else {
+          productObj = {}
+          state.shopCarProduct[index] = null
+          productObj.buyNum = val.buyNum
+          productObj.addDate = val.addDate
+          productObj.custId = val.custId
+          productObj.product = val.product
+          productObj.productId = val.productId
+          productObj.shopCarId = val.shopCarId + '*false'
+          productObj.selected = state.allSelected
+          Vue.set(state.shopCarProduct, index, productObj)
+        }
+      })
     }
   },
   getters: {
@@ -82,6 +113,10 @@ var store = new Vuex.Store({
         }
       })
       return state.totalMoney
+    },
+    getAllSelected: (state) => {
+      // 获取当前商品选中状态
+      return state.allSelected
     }
   }
 })

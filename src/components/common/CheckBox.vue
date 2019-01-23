@@ -20,14 +20,24 @@ export default {
   created: function () {
     if (this.index === undefined || this.index === '') {
       return ''
+    } else if (this.index === -1) {
+      this.selected = this.$store.getters.getAllSelected
     } else {
       this.selected = this.$store.getters.getselected(this.index)
     }
   },
   methods: {
     show: function () {
-      this.selected = !this.selected
-      this.$store.commit('changeSelected', this.index)
+      if (this.index === undefined || this.index === '') {
+        return ''
+      }
+      if (this.index === -1) {
+        this.$store.commit('changeAllSelected', this.$store.getters.getShopCarProduct)
+        this.selected = this.$store.getters.getAllSelected
+      } else {
+        this.$store.commit('changeSelected', this.index)
+        this.selected = this.$store.getters.getselected(this.index)
+      }
     }
   }
 }
