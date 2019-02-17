@@ -11,19 +11,24 @@
 export default {
   data () {
     return {
-      selected: false
     }
   },
   props: {
     index: Number
   },
-  created: function () {
-    if (this.index === undefined || this.index === '') {
-      return ''
-    } else if (this.index === -1) {
-      this.selected = this.$store.getters.getAllSelected
-    } else {
-      this.selected = this.$store.getters.getselected(this.index)
+  computed: {
+    selected: {
+      set: function () {
+      },
+      get: function () {
+        if (this.index === undefined || this.index === '') {
+          return ''
+        } else if (this.index === -1) {
+          return this.$store.getters.getAllSelected
+        } else {
+          return this.$store.getters.getselected(this.index)
+        }
+      }
     }
   },
   methods: {
@@ -32,11 +37,11 @@ export default {
         return ''
       }
       if (this.index === -1) {
-        this.$store.commit('changeAllSelected', this.$store.getters.getShopCarProduct)
-        this.selected = this.$store.getters.getAllSelected
+        this.$store.commit('changeAllSelected')
+        // this.selected = this.$store.getters.getAllSelected
       } else {
         this.$store.commit('changeSelected', this.index)
-        this.selected = this.$store.getters.getselected(this.index)
+        // this.selected = this.$store.getters.getselected(this.index)
       }
     }
   }

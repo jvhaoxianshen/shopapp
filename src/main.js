@@ -64,6 +64,20 @@ var store = new Vuex.Store({
     // 改变选中状态
     changeSelected (state, index) {
       state.shopCarProduct[index].selected = !state.shopCarProduct[index].selected
+      // 如果变成未选中,全选取消
+      if (!state.shopCarProduct[index].selected) {
+        state.allSelected = false
+      }
+      // 如果全部选中，全选按钮变成高亮
+      let flag = true // 全选是否高亮标志
+      state.shopCarProduct.forEach((val, index) => {
+        if (!val.selected) {
+          flag = false
+        }
+      })
+      if (flag) {
+        state.allSelected = true
+      }
     },
     // 改变全选状态
     changeAllSelected (state) {
@@ -78,7 +92,7 @@ var store = new Vuex.Store({
           productObj.custId = val.custId
           productObj.product = val.product
           productObj.productId = val.productId
-          productObj.shopCarId = val.shopCarId + '*true'
+          productObj.shopCarId = val.shopCarId
           productObj.selected = state.allSelected
           Vue.set(state.shopCarProduct, index, productObj)
         } else {
@@ -89,7 +103,7 @@ var store = new Vuex.Store({
           productObj.custId = val.custId
           productObj.product = val.product
           productObj.productId = val.productId
-          productObj.shopCarId = val.shopCarId + '*false'
+          productObj.shopCarId = val.shopCarId
           productObj.selected = state.allSelected
           Vue.set(state.shopCarProduct, index, productObj)
         }
@@ -117,6 +131,15 @@ var store = new Vuex.Store({
     getAllSelected: (state) => {
       // 获取当前商品选中状态
       return state.allSelected
+    },
+    getShopcarIdStr: (state) => {
+      let str = ''
+      state.shopCarProduct.forEach((val, index) => {
+        if (val.selected) {
+          str += val.shopCarId + ','
+        }
+      })
+      return str
     }
   }
 })
