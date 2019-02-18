@@ -25,7 +25,7 @@ export default new Router({
       }
     },
     {
-      path: '/dist/',
+      path: '/dist/:type',
       name: 'ShopCar',
       component: ShopCar,
       meta: {

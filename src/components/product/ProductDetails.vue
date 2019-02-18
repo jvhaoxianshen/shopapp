@@ -10,7 +10,7 @@
       <maskLayer  v-if="setNumShow"></maskLayer>
     </transition>
     <transition name="slide-fade">
-      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow" :productDetail="productDetail" @toClose="closeSetNumWindow"></seclectProductNum>
+      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow" :productDetail="productDetail" :buyType="buyType" @toClose="closeSetNumWindow"></seclectProductNum>
     </transition>
     <!-- 选择商品数量样式结束 -->
     <!-- 头部导航栏开始 -->
@@ -94,7 +94,8 @@ export default {
     return {
       productDetail: {}, // 商品数据
       loaderShow: true, // 加载样式
-      setNumShow: false // 点击加入购物或立即购买弹出选择数量样式
+      setNumShow: false, // 点击加入购物或立即购买弹出选择数量样式
+      buyType: '' // 判断是立即购买还是加入购物车（0加入购物车，1直接购买）
     }
   },
   created: function () {
@@ -107,7 +108,7 @@ export default {
     },
     // 进入购物车
     goShopCar: function () {
-      this.$router.push({name: 'ShopCar'})
+      this.$router.push({name: 'ShopCar', params: {type: 'shopCar'}})
     },
     // 获取商品详情事件
     getProductDetail: function () {
@@ -125,14 +126,20 @@ export default {
             this.loaderShow = false
           }, 500)
         })
+        .catch(() => {
+          this.$toast('网络开小差了')
+          this.loaderShow = false
+        })
     },
     // 加入购物车事件
     addShopcar: function () {
       this.openSetNumWindow()
+      this.buyType = '0' // 0代表加入购物车
     },
     // 立即购买事件
     buyNow: function () {
       this.openSetNumWindow()
+      this.buyType = '1' // 1代表直接购买
     },
     // 关闭数量设置框样式
     closeSetNumWindow: function () {

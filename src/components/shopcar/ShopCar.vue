@@ -73,7 +73,12 @@ export default {
   methods: {
     // 返回上一页事件
     back: function () {
-      this.$router.back()
+      if (this.$route.params.type === 'shopCarTab') {
+        this.$router.go(0)
+        this.$router.push({name: 'Home'})
+      } else {
+        this.$router.back()
+      }
     },
     // 获取购物车的数据
     getShopcar: function () {
@@ -149,20 +154,28 @@ export default {
     },
     // 删除购物车中选中的的商品
     deleteSelectedPro: function () {
-      let data = {
-        shopCarId: this.$store.getters.getShopcarIdStr
-      }
-      this.axios.post('water/shopCar/delete', data) // 删除购物车数据
-        .then(() => {
-          let deleteArry = this.$store.getters.getShopcarIdStr.split(',')
-          deleteArry.forEach((val, index) => {
-            this.productList.forEach((res, index) => {
-              if (res.shopCarId === val) {
-                this.productList.splice(index, 1)
-              }
+      this.$MessageBox.confirm('确定要将该商品移除购物车吗?')
+        .then(action => {
+          let data = {
+            shopCarId: this.$store.getters.getShopcarIdStr
+          }
+          this.axios.post('water/shopCar/delete', data) // 删除购物车数据
+            .then(() => {
+              let deleteArry = this.$store.getters.getShopcarIdStr.split(',')
+              deleteArry.forEach((val, index) => {
+                this.productList.forEach((res, index) => {
+                  if (res.shopCarId === val) {
+                    this.productList.splice(index, 1)
+                  }
+                })
+              })
+              this.$toast('删除成功')
             })
-          })
-          this.$toast('删除成功')
+            .catch(() => {
+              this.$toast('网络开小差了')
+            })
+        })
+        .catch(() => {
         })
     }
   }

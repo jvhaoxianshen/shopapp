@@ -9,7 +9,6 @@
         <productList></productList>
       </mt-tab-container-item>
       <mt-tab-container-item id="shopcar">
-        <mt-cell v-for="n in 7" title="tab-container 3" :key="n"></mt-cell>
       </mt-tab-container-item>
       <mt-tab-container-item id="myinfo">
         <mt-cell v-for="n in 2" title="tab-container 4" :key="n"></mt-cell>
@@ -41,8 +40,9 @@
 
 <script>
 import productList from '../product/ProductList'
+import shopCar from '../shopcar/ShopCar'
 export default {
-  components: { productList },
+  components: { productList, shopCar },
   data () {
     return {
       message: this.selected, // 选中的页面
@@ -69,6 +69,7 @@ export default {
         case 'shopcar':
           this.setTabbarIcon()
           this.tabs[2] = require('../../assets/icon/tabbar/shopcar-active.svg')
+          this.$router.push({name: 'ShopCar', params: {type: 'shopCarTab'}})
           break
         case 'myinfo':
           this.setTabbarIcon()

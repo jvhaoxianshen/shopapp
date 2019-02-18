@@ -45,6 +45,9 @@ export default {
           })
           this.productList = res.data
         })
+        .catch(() => {
+          this.$toast('网络开小差了')
+        })
     }
   },
   watch: {

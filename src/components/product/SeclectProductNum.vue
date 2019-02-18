@@ -32,7 +32,7 @@
     <!-- 修改数量按钮区结束 -->
     <!-- 底部按钮区开始 -->
     <div class="footer-container">
-      <div class="confirm-btn">确定</div>
+      <div class="confirm-btn" @click="confirm">确定</div>
     </div>
     <!-- 底部按钮区结束 -->
   </div>
@@ -65,7 +65,8 @@ export default {
   },
   props: {
     setNumShow: Boolean,
-    productDetail: Object
+    productDetail: Object,
+    buyType: String
   },
   methods: {
     // 关闭数量设置框样式
@@ -103,6 +104,7 @@ export default {
       this.position.y = touch.clientY // 触摸点位置
       this.dy = this.$refs.box.offsetTop // 记录位置
     },
+    // 下拉移动效果
     move: function () {
       if (this.flags) {
         var touch
@@ -126,6 +128,7 @@ export default {
         }, false)
       }
     },
+    // 移动后最终效果
     end: function () {
       if (!this.status) {
         this.$refs.box.style.top = '17rem'
@@ -142,6 +145,24 @@ export default {
         setTimeout(() => {
           this.isleft = false
         }, 500)
+      }
+    },
+    // 添加购物车或立即购买事件
+    confirm: function () {
+      if (this.buyType === '0') {
+        // 加入购物车
+        var data = {
+          productId: this.productDetail.productId,
+          buyNum: this.nums,
+          custId: this.$store.getters.getOpenid
+        }
+        this.axios.post('water/shopCar/insert', data)
+          .then(() => {
+            this.$toast('添加成功')
+          })
+          .catch(() => {
+            this.$toast('网络开小差了')
+          })
       }
     }
   }
