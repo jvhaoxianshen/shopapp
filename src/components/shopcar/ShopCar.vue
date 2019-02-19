@@ -87,13 +87,15 @@ export default {
       }
       this.axios.post('water/shopCar/list', data)
         .then(res => {
-          console.log(res)
           res.data.forEach((val, index) => {
             res.data[index].product.productInfo = require('../../assets' + val.product.productInfo)
             res.data[index].selected = false
           })
           this.productList = res.data
           this.$store.commit('initializeShopCarProduct', res.data)
+        })
+        .catch(() => {
+          this.$toast('服务器开小差了')
         })
     },
     // 添加商品数量

@@ -11,7 +11,7 @@
       <mt-tab-container-item id="shopcar">
       </mt-tab-container-item>
       <mt-tab-container-item id="myinfo">
-        <mt-cell v-for="n in 2" title="tab-container 4" :key="n"></mt-cell>
+        <myInfo></myInfo>
       </mt-tab-container-item>
     </mt-tab-container>
     <!-- 内容容器区结束 -->
@@ -41,8 +41,9 @@
 <script>
 import productList from '../product/ProductList'
 import shopCar from '../shopcar/ShopCar'
+import myInfo from '../myinfo/MyInfo'
 export default {
-  components: { productList, shopCar },
+  components: { productList, shopCar, myInfo },
   data () {
     return {
       message: this.selected, // 选中的页面
