@@ -149,6 +149,10 @@ export default {
     },
     // 添加购物车或立即购买事件
     confirm: function () {
+      /**
+       * 0代表加入购物车
+       * 1代表立即购买
+       */
       if (this.buyType === '0') {
         // 加入购物车
         var data = {
@@ -159,10 +163,16 @@ export default {
         this.axios.post('water/shopCar/insert', data)
           .then(() => {
             this.$toast('添加成功')
+            this.$emit('listenToChildEvent', 'close')
           })
           .catch(() => {
             this.$toast('网络开小差了')
           })
+      } else if (this.buyType === '1') {
+        localStorage.setItem('buyNums', this.nums)
+        localStorage.setItem('proId', this.$route.params.productId)
+        localStorage.setItem('orderType', 'buyNow')
+        this.$router.push({name: 'GenerateOrder', params: {orderType: 'buyNow'}})
       }
     }
   }

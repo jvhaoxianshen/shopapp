@@ -10,7 +10,7 @@
       <maskLayer  v-if="setNumShow"></maskLayer>
     </transition>
     <transition name="slide-fade">
-      <seclectProductNum  v-if="setNumShow" :setNumShow="setNumShow" :productDetail="productDetail" :buyType="buyType" @toClose="closeSetNumWindow"></seclectProductNum>
+      <seclectProductNum v-on:listenToChildEvent="showFlag" v-if="setNumShow" :setNumShow="setNumShow" :productDetail="productDetail" :buyType="buyType" @toClose="closeSetNumWindow"></seclectProductNum>
     </transition>
     <!-- 选择商品数量样式结束 -->
     <!-- 头部导航栏开始 -->
@@ -66,7 +66,7 @@
       <!-- 产品介绍区一结束 -->
       <!-- 产品介绍区二开始 -->
       <div class="product-introduction-two">
-        <img src="../../assets/img/productIntroduction/ddw_jiesao.jpg" alt="">
+        <img src="/static/img/productIntroduction/ddw_jiesao.jpg" alt="">
       </div>
       <!-- 产品介绍区二结束 -->
     </div>
@@ -101,10 +101,16 @@ export default {
   created: function () {
     this.getProductDetail()
   },
+  beforeRouteLeave: function (to, from, next) {
+    if (to.name === 'GenerateOrder') {
+      localStorage.setItem('fromPath', from.path)
+    }
+    next()
+  },
   methods: {
     // 返回上一页事件
     back: function () {
-      this.$router.back()
+      this.$router.push({name: 'Home'})
     },
     // 进入购物车
     goShopCar: function () {
@@ -119,7 +125,8 @@ export default {
         .then(res => {
           res.data[0].proPic.forEach((val, index) => {
             // var context = require.context('../../assets', true, /\.jpg$/) console.log(context.keys())
-            res.data[0].proPic[index].pic = require('../../assets' + val.pic) // context(val.pic)
+            // res.data[0].proPic[index].pic = require('../../assets' + val.pic) // context(val.pic)
+            res.data[0].proPic[index].pic = '/static' + val.pic // context(val.pic)
           })
           this.productDetail = res.data[0]
           setTimeout(() => {
@@ -148,6 +155,13 @@ export default {
     // 打开数量设置框
     openSetNumWindow: function () {
       this.setNumShow = true
+    },
+    // 控制选择数量窗口打开和关闭
+    showFlag: function (data) {
+      console.log(data)
+      if (data === 'close') {
+        this.setNumShow = false
+      }
     }
   }
 }
@@ -188,6 +202,8 @@ export default {
     height: 100%;
     padding-top: 40px;
     background-color: #F3F3F3;
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
   }
   /* 轮播图容器样式 */
   .swipe-container {

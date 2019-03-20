@@ -39,7 +39,7 @@
   <!-- 购物车商品区结束 -->
   <!-- 底部菜单栏开始 -->
   <div class="footer-container">
-    <div class="generate-but"  >生成订单</div>
+    <div class="generate-but"  @click="generateOrder()">生成订单</div>
     <transition name="fade">
       <div class="generate-but delete" v-show="!deleteShow" @click="deleteSelectedPro">删除</div>
     </transition>
@@ -70,14 +70,42 @@ export default {
   created: function () {
     this.getShopcar()
   },
+  mounted () {
+    // 监听浏览器事件
+    if (window.history && window.history.pushState) {
+      window.addEventListener('popstate', () => {
+        if (document.URL.split('dist')[1].length <= 1) {
+          this.$router.go(0)
+        }
+      }, true)
+    }
+  },
+  destroyed () { // 在组件生命周期结束的时候销毁。
+    window.removeEventListener('popstate', this.judgeUrl, true)
+  },
+  // 离开页面之前将全选取消
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'GenerateOrder') {
+      localStorage.setItem('fromPath', from.path)
+    }
+    next()
+    this.$store.commit('changeASelected')
+  },
   methods: {
     // 返回上一页事件
     back: function () {
       if (this.$route.params.type === 'shopCarTab') {
         this.$router.go(0)
-        this.$router.push({name: 'Home'})
+        this.$router.push({path: '/dist/'})
       } else {
         this.$router.back()
+      }
+    },
+    judgeUrl: function () {
+      console.log(document.URL.split('dist')[1])
+      if (document.URL.split('dist')[1].length <= 1) {
+        alert(11)
+        this.$router.go(0)
       }
     },
     // 获取购物车的数据
@@ -88,7 +116,8 @@ export default {
       this.axios.post('water/shopCar/list', data)
         .then(res => {
           res.data.forEach((val, index) => {
-            res.data[index].product.productInfo = require('../../assets' + val.product.productInfo)
+            // res.data[index].product.productInfo = require('../../assets' + val.product.productInfo)
+            res.data[index].product.productInfo = '/static' + val.product.productInfo
             res.data[index].selected = false
           })
           this.productList = res.data
@@ -179,6 +208,16 @@ export default {
         })
         .catch(() => {
         })
+    },
+    // 生成订单
+    generateOrder: function () {
+      let getShopcarIdStr = this.$store.getters.getShopcarIdStr
+      if (getShopcarIdStr === null || getShopcarIdStr === '' || getShopcarIdStr === undefined) {
+        return this.$toast('未选中商品无法生成订单')
+      }
+      localStorage.setItem('shopcarIdStr', getShopcarIdStr)
+      localStorage.setItem('orderType', 'shopCar')
+      this.$router.push({name: 'GenerateOrder', params: {orderType: 'shopCar'}})
     }
   }
 }

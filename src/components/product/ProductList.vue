@@ -41,7 +41,8 @@ export default {
       this.axios.post('water/product/list')
         .then(res => {
           res.data.forEach((val, index) => {
-            res.data[index].productInfo = require('../../assets' + val.productInfo)
+            // res.data[index].productInfo = require('../../assets' + val.productInfo)
+            res.data[index].productInfo = '/static' + val.productInfo
           })
           this.productList = res.data
         })

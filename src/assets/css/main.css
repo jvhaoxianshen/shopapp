@@ -38,3 +38,7 @@ li {
 .mint-searchbar-core {
   background-color: #f3f3f3;
 }
+/* 选择器字体大小修改 */
+.picker-item {
+  font-size: 14px ;
+}

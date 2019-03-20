@@ -7,7 +7,7 @@ import router from './router'
 // import MintUI from 'mint-ui'
 import './assets/css/main.css'
 import './assets/css/my-mint.scss'
-import { MessageBox, Checklist, Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
+import { Picker, Popup, Switch, Field, MessageBox, Checklist, Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
 // 配置axios
 import Qs from 'qs'
 import axios from 'axios' // 导入axios
@@ -17,7 +17,7 @@ import Vuex from 'vuex' // 导入vuex包
 var axiosInstance = axios.create({
   // baseURL: 'http://192.168.0.42:8088/shopApp-WXPage/', // 开发环境
   // baseURL: 'http://120.26.209.236:80/shopApp-WXPage/', //生产环境
-  baseURL: 'http://localhost:8088/shopApp-WXPage/', // 开发环境
+  baseURL: 'http://192.168.0.42:8088/shopApp-WXPage/', // 开发环境
   transformRequest: [function (data) {
     data = Qs.stringify(data)
     return data
@@ -30,18 +30,22 @@ axios.defaults.timeout = 10000 // 超时时间
 Vue.config.productionTip = false
 Vue.component(Tabbar.name, Tabbar) // 底部导航菜单组件
 Vue.component(TabItem.name, TabItem) // 底部导航菜单组件
-Vue.component(TabContainer.name, TabContainer) // 页面容器样式
-Vue.component(TabContainerItem.name, TabContainerItem) // 页面容器样式
+Vue.component(TabContainer.name, TabContainer) // 页面容器组件
+Vue.component(TabContainerItem.name, TabContainerItem) // 页面容器组件
 Vue.component(Cell.name, Cell)
 Vue.component(Search.name, Search) // 搜索框组件
 Vue.component(Header.name, Header) // 顶部组件
 Vue.component(Button.name, Button) // 按钮组件
-Vue.component(Swipe.name, Swipe) // 轮播图样式
-Vue.component(SwipeItem.name, SwipeItem) // 轮播图样式
-Vue.component(Spinner.name, Spinner) // 加载样式
-Vue.prototype.$toast = Toast // 提示框样式
-Vue.component(Checklist.name, Checklist) // 选择框样式
-Vue.prototype.$MessageBox = MessageBox // 选择框样式
+Vue.component(Swipe.name, Swipe) // 轮播图组件
+Vue.component(SwipeItem.name, SwipeItem) // 轮播图组件
+Vue.component(Spinner.name, Spinner) // 加载组件
+Vue.prototype.$toast = Toast // 提示框组件
+Vue.component(Checklist.name, Checklist) // 选择框组件
+Vue.prototype.$MessageBox = MessageBox // 选择框组件
+Vue.component(Field.name, Field) // 表单输入框组件
+Vue.component(Switch.name, Switch) // 开关组件
+Vue.component(Popup.name, Popup) // 弹出框样式
+Vue.component(Picker.name, Picker) // 选择器样式
 // Vue.use(MintUI)
 /* eslint-disable no-new */
 Vue.use(Vuex)
@@ -109,6 +113,9 @@ var store = new Vuex.Store({
           Vue.set(state.shopCarProduct, index, productObj)
         }
       })
+    },
+    changeASelected: function (state) {
+      state.allSelected = false
     }
   },
   getters: {
@@ -144,6 +151,11 @@ var store = new Vuex.Store({
     }
   }
 })
+
+// 头尾去空格
+Vue.prototype.$trim = function (str) {
+  return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+}
 
 new Vue({
   el: '#app',

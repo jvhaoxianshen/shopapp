@@ -2,11 +2,13 @@
   <div class="container">
     <!-- 头像区开始 -->
     <div class="header-container">
-      <img :src="userData.userHeadPic" alt="">
-      <span class="name">
-        <span>{{userData.userName}}</span>
-        <span class="enter"></span>
-      </span>
+      <div style="position: relative;">
+        <img :src="userData.userHeadPic" alt="">
+        <span class="name" @click="updateData()">
+          <span>{{userData.userName}}</span>
+          <span class="enter"></span>
+        </span>
+      </div>
     </div>
     <!-- 头像区结束 -->
     <!-- 余额区开始 -->
@@ -72,7 +74,7 @@
       <!-- 标题区结束 -->
       <!-- 菜单中心开始 -->
       <div class="menu">
-        <li>
+        <li @click="toAddress()">
           <img src="../../assets/icon/myInfo/address.svg" alt="">
           <p>地址管理</p>
         </li>
@@ -101,7 +103,6 @@ export default {
     this.axios.post('water/user/list', {custId: this.$store.getters.getOpenid})
       .then(res => {
         this.userData = res.data[0]
-        console.log(this.userData)
         return this.axios.post('water/vip/list', {custId: this.$store.getters.getOpenid})
       })
       .catch(() => {
@@ -123,6 +124,16 @@ export default {
           this.vipData.allNum = 0
         }
       })
+  },
+  methods: {
+    // 修改个人信息
+    updateData: function () {
+      this.$router.push({name: 'UpdateUserInfo'})
+    },
+    // 地址管理
+    toAddress: function () {
+      this.$router.push({name: 'AddressManager'})
+    }
   }
 }
 </script>
@@ -178,6 +189,7 @@ export default {
   border-radius: 13px;
   padding: 0.6rem;
 }
+/* 会员等级样式 */
 .vip-level {
   width: 32%;
   float: left;
@@ -187,6 +199,7 @@ export default {
   color: #A9ACB1;
   font-size: 14px;
 }
+/* 余额样式 */
 .money {
   width: 68%;
   float: left;
@@ -223,10 +236,11 @@ export default {
 .order-container .title .title-name {
   font-weight: 550;
 }
+/* 进入全部订单列表 */
 .query-btn {
   font-size: 14px;
   color: #A9ACB1;
-  position: absolute;
+  float: right;
   right: 1.5rem;
 }
 .order-enter {
@@ -238,6 +252,7 @@ export default {
   position: relative;
   top: 0.15rem;
 }
+/* 订单分类菜单样式 */
 .order-type {
   width: 100%;
   height: 4rem;
@@ -270,10 +285,12 @@ export default {
   padding: 0.5rem 1rem 0.5rem;
   text-align: left;
   font-size: 15px;
+  position: relative;
 }
 .set-container .title .title-name {
   font-weight: 550;
 }
+/* 系统中心菜单样式 */
 .menu {
   padding-top: 0.8rem;
 }
@@ -285,5 +302,6 @@ export default {
 }
 .menu li img {
   height: 50%;
+  margin-bottom: 0.2rem;
 }
 </style>
