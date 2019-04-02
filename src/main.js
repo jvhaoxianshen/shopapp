@@ -7,7 +7,7 @@ import router from './router'
 // import MintUI from 'mint-ui'
 import './assets/css/main.css'
 import './assets/css/my-mint.scss'
-import { Picker, Popup, Switch, Field, MessageBox, Checklist, Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
+import { Navbar, Picker, Popup, Switch, Field, MessageBox, Checklist, Toast, Spinner, Swipe, SwipeItem, Button, Header, Tabbar, TabItem, TabContainer, TabContainerItem, Cell, Search } from 'mint-ui'
 // 配置axios
 import Qs from 'qs'
 import axios from 'axios' // 导入axios
@@ -15,9 +15,9 @@ import VueAxios from 'vue-axios'
 import Vuex from 'vuex' // 导入vuex包
 
 var axiosInstance = axios.create({
-  // baseURL: 'http://192.168.0.42:8088/shopApp-WXPage/', // 开发环境
-  // baseURL: 'http://120.26.209.236:80/shopApp-WXPage/', //生产环境
-  baseURL: 'http://192.168.0.42:8088/shopApp-WXPage/', // 开发环境
+  // baseURL: 'http://192.168.0.30:8088/shopApp-WXPage/', // 开发环境
+  // baseURL: 'http://120.26.209.236:80/shopApp-WXPage/', // 生产环境
+  baseURL: 'http://192.168.0.30:8088/shopApp-WXPage/', // 开发环境
   transformRequest: [function (data) {
     data = Qs.stringify(data)
     return data
@@ -46,18 +46,22 @@ Vue.component(Field.name, Field) // 表单输入框组件
 Vue.component(Switch.name, Switch) // 开关组件
 Vue.component(Popup.name, Popup) // 弹出框样式
 Vue.component(Picker.name, Picker) // 选择器样式
+Vue.component(Navbar.name, Navbar) // 菜单栏样式
 // Vue.use(MintUI)
 /* eslint-disable no-new */
 Vue.use(Vuex)
 
 var store = new Vuex.Store({
   state: {
-    openid: 'o5exH1Byk1cPaCPQ0UZAKfTkA1Co', // 用户id
+    openid: localStorage.getItem('openid'), // 用户id
     shopCarProduct: [], // 购物车商品数据
     totalMoney: 0, // 总计金额
     allSelected: false // 全选状态
   },
   mutations: {
+    initOpenid (state, data) {
+      state.openid = data
+    },
     // this.$store.commit('方法名称','按需传参数')
     // 点击加入购物车
     addToCar (state, productInfo) {
@@ -159,6 +163,13 @@ Vue.prototype.$trim = function (str) {
 
 new Vue({
   el: '#app',
+  beforeCreate: function () {
+    // 初始化用户id存储到本地localStorage
+    if (this.$route.query.openid !== null && this.$route.query.openid !== undefined) {
+      localStorage.setItem('openid', this.$route.query.openid.toString().split(',')[0])
+      this.$store.commit('initOpenid', localStorage.getItem('openid'))
+    }
+  },
   router,
   components: { App },
   template: '<App/>',

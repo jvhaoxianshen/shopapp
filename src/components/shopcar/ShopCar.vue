@@ -9,10 +9,10 @@
   <!-- 购物车商品区开始 -->
   <div class="mid-container">
     <transition-group name="slide-fade">
-      <li class="shopcar-product" v-for="(val, index) in productList" :key="val.shopCarId">
+      <li class="shopcar-product" v-for="(val, index) in productList" :key="val.shopCarId" @click="toPage(val.product.productId)">
         <!-- 单选框区开始 -->
-        <div class="check-box">
-          <checkBox :index="index"></checkBox>
+        <div class="check-box" @click.stop.prevent>
+          <checkBox :index="index"  ></checkBox>
         </div>
         <!-- 单选框区结束 -->
         <!-- 图片区开始 -->
@@ -26,9 +26,9 @@
           <span class="product-pice">{{'￥' + val.product.productPrice}}</span>
           <!-- 数量调整区开始 -->
           <div class="product-nums">
-            <span class="num-set" @click="subtractProductNums(index)">-</span>
+            <span class="num-set" @click.stop.prevent="subtractProductNums(index)">-</span>
             <span class="num">{{val.buyNum}}</span>
-            <span class="num-set num-set-add" @click="addProductNums(index)">+</span>
+            <span class="num-set num-set-add" @click.stop.prevent="addProductNums(index)">+</span>
           </div>
           <!-- 数量调整区结束 -->
         </div>
@@ -70,19 +70,6 @@ export default {
   created: function () {
     this.getShopcar()
   },
-  mounted () {
-    // 监听浏览器事件
-    if (window.history && window.history.pushState) {
-      window.addEventListener('popstate', () => {
-        if (document.URL.split('dist')[1].length <= 1) {
-          this.$router.go(0)
-        }
-      }, true)
-    }
-  },
-  destroyed () { // 在组件生命周期结束的时候销毁。
-    window.removeEventListener('popstate', this.judgeUrl, true)
-  },
   // 离开页面之前将全选取消
   beforeRouteLeave (to, from, next) {
     if (to.name === 'GenerateOrder') {
@@ -95,17 +82,15 @@ export default {
     // 返回上一页事件
     back: function () {
       if (this.$route.params.type === 'shopCarTab') {
-        this.$router.go(0)
-        this.$router.push({path: '/dist/'})
+        this.$router.push({name: 'Home', params: {type: 'home'}})
       } else {
-        this.$router.back()
+        // this.$router.back()
+        this.$router.push({name: 'ProductDeatils', params: {productId: localStorage.getItem('productId')}})
       }
     },
     judgeUrl: function () {
-      console.log(document.URL.split('dist')[1])
       if (document.URL.split('dist')[1].length <= 1) {
-        alert(11)
-        this.$router.go(0)
+        this.$router.back()
       }
     },
     // 获取购物车的数据
@@ -218,12 +203,19 @@ export default {
       localStorage.setItem('shopcarIdStr', getShopcarIdStr)
       localStorage.setItem('orderType', 'shopCar')
       this.$router.push({name: 'GenerateOrder', params: {orderType: 'shopCar'}})
+    },
+    // 点击产品进入对应的页面
+    toPage: function (productId) {
+      this.$router.push({name: 'ProductDeatils', params: {productId: productId}})
     }
   }
 }
 </script>
 
 <style scoped>
+.container {
+  background: #FFFFFF;
+}
 .mid-container {
   padding-top: 40px;
   padding-bottom: 4rem;
@@ -233,6 +225,7 @@ export default {
   height: 6.5rem;
   position: relative;
   border-bottom: 1px solid #FCF8E3;
+  background: #FFFFFF;
  }
  /* 多选框样式 */
  .check-box {

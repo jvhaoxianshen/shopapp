@@ -36,16 +36,16 @@
     </div>
     <!-- 标题区结束 -->
     <!-- 商品详细信息区开始 -->
-    <div class="goods" v-for="(val) in productList" :key="val.productId">
+    <div class="goods" v-for="(val) in productList" :key="val.integralProId">
       <div class="goods-img">
-        <img :src="'/static' + val.productInfo" alt="">
+        <img :src="'/static' + val.integralProInfo" alt="">
       </div>
       <div class="goods-info">
         <p class="goods-name">
-          <span>{{val.productName}}</span>
+          <span>{{val.integralProName}}</span>
         </p>
         <p class="goods-pice-nums">
-          <span class="pice">{{'￥' + val.productPrice}}</span>
+          <span class="pice">{{val.integralProPrice + '积分'}}</span>
           <span class="nums">{{'x' + val.buyNums}}</span>
         </p>
       </div>
@@ -80,7 +80,7 @@
       <p>
         <span>{{'共'+ totalBuyNums +'件商品&nbsp;&nbsp;&nbsp;'}}</span>
         <span>{{'小计：'}}</span>
-        <span class="subtotal-money">{{'￥'+ subtotalMoney +''}}</span>
+        <span class="subtotal-money">{{subtotalMoney +''}}</span>
       </p>
     </div>
     <!-- 商品小计区结束 -->
@@ -89,10 +89,10 @@
   <!-- 底部开始 -->
   <div class="footer-container">
     <div class="money-container">
-      <span>{{'应付金额：'}}</span>
-      <span class="money">{{'￥'+ totalMoney +''}}</span>
+      <span>{{'应付积分：'}}</span>
+      <span class="money">{{totalMoney}}</span>
     </div>
-    <div class="genert-order" @click="generateOrder()">生成订单</div>
+    <div class="genert-order" @click="generateOrder()">确认兑换</div>
   </div>
   <!-- 底部结束 -->
 </div>
@@ -128,32 +128,11 @@ export default {
     // 初始化物品信息
     this.initGoods()
   },
-  mounted () {
-    // 监听浏览器事件
-    if (window.history && window.history.pushState) {
-      window.addEventListener('popstate', this.toUrl, true)
-    }
-  },
   methods: {
-    toUrl: function () {
-      if (localStorage.getItem('fromPath') === '/ShopCar/shopCar') {
-        this.$router.push({name: 'ProductDeatils', params: {productId: localStorage.getItem('productId')}})
-        localStorage.removeItem('fromPath')
-      } else if (localStorage.getItem('fromPath') === '/ShopCar/shopCarTab') {
-        this.$router.push({name: 'Home', params: {type: 'home'}})
-        this.$router.go(0)
-      } else if (localStorage.getItem('fromPath') === undefined || localStorage.getItem('fromPath') === null || localStorage.getItem('fromPath') === '') {
-        this.$router.push({name: 'Home', params: {type: 'product'}})
-      } else {
-        this.$router.push({path: localStorage.getItem('fromPath')})
-        localStorage.removeItem('fromPath')
-      }
-      window.removeEventListener('popstate', this.toUrl, true)
-    },
     // 返回上一页事件
     back: function () {
       localStorage.removeItem('selectedAddressId')
-      this.$router.push({path: localStorage.getItem('fromPath')})
+      this.$router.push({name: 'IntegralProDetails', params: {productId: this.$route.params.productId}})
     },
     // 初始化地址信息
     initAddress: function () {
@@ -208,53 +187,33 @@ export default {
     },
     // 选择收货地址
     selectedAddress: function () {
-      this.$router.push({name: 'AddressManager', params: {typed: 'selectedAddress'}})
+      this.$router.push({name: 'AddressManager', params: {typed: 'integralOrder'}})
     },
     // 初始化商品数据
     initGoods: function () {
       // 如果订单类型是立即购买
-      if (this.$route.params.orderType === 'buyNow') {
-        let data = {
-          productId: localStorage.getItem('proId')
-        }
-        this.axios.post('water/product/info', data)
-          .then((res) => {
-            this.productList = res.data
-            this.productList[0].buyNums = localStorage.getItem('buyNums')
-            this.totalBuyNums = localStorage.getItem('buyNums')
-            this.subtotalMoney = parseInt(localStorage.getItem('buyNums')) * parseInt(this.productList[0].productPrice)
-            this.totalMoney = this.subtotalMoney - parseInt(this.freight) - parseInt(this.discountMoney)
-          })
-      } else if (this.$route.params.orderType === 'shopCar') {
-        this.axios.post('water/shopCar/part', {shopCarId: localStorage.getItem('shopcarIdStr')})
-          .then(res => {
-            this.totalBuyNums = 0
-            this.subtotalMoney = 0
-            res.data.forEach((val, index) => {
-              this.productList.push({
-                productId: val.productId,
-                productInfo: val.product.productInfo,
-                productName: val.product.productName,
-                productPrice: val.product.productPrice,
-                buyNums: val.buyNum
-              })
-              this.totalBuyNums += parseInt(val.buyNum)
-              this.subtotalMoney += parseInt(val.buyNum) * parseInt(val.product.productPrice)
-            })
-            this.totalMoney = this.subtotalMoney - parseInt(this.freight) - parseInt(this.discountMoney)
-          })
+      let data = {
+        integralProId: this.$route.params.productId
       }
+      this.axios.post('water/integralPro/selectOne', data)
+        .then((res) => {
+          this.productList = res.data
+          this.productList[0].buyNums = localStorage.getItem('buyNums')
+          this.totalBuyNums = localStorage.getItem('buyNums')
+          this.subtotalMoney = this.productList[0].integralProPrice
+          this.totalMoney = this.productList[0].integralProPrice
+        })
     },
     // 生成订单
     generateOrder: function () {
       let arrys = [] // 订单产品信息
       this.productList.forEach((val, index) => {
         arrys.push({
-          productId: val.productId,
+          productId: val.integralProId,
           buyNum: val.buyNums,
-          productName: val.productName,
-          productPrice: val.productPrice,
-          productPic: val.productInfo
+          productName: val.integralProName,
+          productPrice: val.integralProPrice,
+          productPic: val.integralProInfo
         })
       })
       // 订单数据
@@ -266,7 +225,7 @@ export default {
         leaveMessage: this.lessMessage, // 留言
         addressId: this.address.addressId, // 地址id
         dinDanInfoArry: JSON.stringify(arrys), // 商品信息
-        flag: '0', // 付款状态
+        flag: '1', // 付款状态
         addressInfo: this.address.addressInfo, // 收货人地址信息
         addressName: this.address.name, // 收货人姓名
         addressPhone: this.address.phoneNum, // 收货人手机号
@@ -278,47 +237,22 @@ export default {
         .then(res => {
           localStorage.setItem('orderId', res.data)
           localStorage.removeItem('selectedAddressId')
-          localStorage.removeItem('proId')
-          localStorage.removeItem('orderType')
-          // localStorage.removeItem('buyNums')
-          return this.axios.post('water/shopCar/delete', {shopCarId: localStorage.getItem('shopcarIdStr')})
-        })
-        .then(res => {
-          localStorage.removeItem('shopcarIdStr')
-          return this.axios.post('water/vip/list', {custId: this.$store.getters.getOpenid})
-        })
-        .then(res => {
-          if (parseInt(res.data[0].user[0].vip.money) >= parseInt(this.totalMoney)) {
-            this.$MessageBox.confirm('余额充足是否要完成支付?')
-              .then(action => {
-                let data = {
-                  custId: this.$store.getters.getOpenid,
-                  money: '-' + this.totalMoney
-                }
-                this.axios.post('water/vip/updateMoneyUser', data)
-                  .then(() => {
-                    this.$toast('支付成功')
-                    return this.axios.post('water/dindan/autoUpdate', {dindanId: localStorage.getItem('orderId')})
-                  })
-                  .then(res => {
-                    localStorage.removeItem('selectedAddressId')
-                    this.$router.push({name: 'CompleteOrder'})
-                  })
-                  .catch(() => {
-                    this.$toast('支付失败')
-                    localStorage.removeItem('orderId')
-                    this.$router.push({name: 'CompleteOrder'})
-                  })
-              })
-              .catch(() => {
-                this.$router.push({name: 'OrderList', params: {orderType: '0'}})
-              })
-          } else {
-            this.$MessageBox.alert('您的余额不足，已经为您生成待支付订单').then(action => {
-              localStorage.removeItem('orderId')
-              this.$router.push({name: 'OrderList', params: {orderType: '0'}})
-            })
+          let data = {
+            custId: this.$store.getters.getOpenid,
+            integral: '-' + this.totalMoney
           }
+          return this.axios.post('water/vip/updateIntegralUser', data)
+        })
+        .then(action => {
+          this.$toast('支付成功')
+          localStorage.removeItem('selectedAddressId')
+          this.$router.push({name: 'CompleteOrder'})
+        })
+        .catch(() => {
+          this.$router.push({name: 'OrderList', params: {orderType: '0'}})
+          this.$toast('支付失败')
+          localStorage.removeItem('orderId')
+          this.$router.push({name: 'CompleteOrder'})
         })
     }
   }

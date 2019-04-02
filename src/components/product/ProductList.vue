@@ -1,10 +1,13 @@
 <template>
   <div class="product-container container" ref="mid">
-    <mt-search
-      v-model="searchValue"
-      cancel-text="取消"
-      placeholder="搜索">
-    </mt-search>
+    <form action="" v-on:submit.prevent="">
+      <mt-search
+        v-model="searchValue"
+        cancel-text="取消"
+        @keyup.enter.native="search"
+        placeholder="搜索" autofocus>
+      </mt-search>
+    </form>
     <div class="product-List" >
       <li class="product-card" @click="go(val.productId)" v-for="(val) in productList" :key="val.productId">
         <img :src="val.productInfo" alt="" class="pro-img">
@@ -74,6 +77,7 @@ export default {
     height: 3rem;
     position: fixed;
     width: 100%;
+    z-index: 999;
   }
    /*产品列表样式*/
   .product-List {
@@ -83,7 +87,7 @@ export default {
   /*产品卡片样式*/
   .product-card {
     width: 47%;
-    height: 12.5rem;
+    height: 14rem;
     float: left;
     margin: 0.6rem 1.5% 0;
     background: #FFFFFF;

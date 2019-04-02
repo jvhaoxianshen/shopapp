@@ -69,8 +69,11 @@ export default {
 </script>
 
 <style scoped>
- .mid-container {
-   margin-top: 40px;
+.container {
+  padding-top: 40px;
+}
+.mid-container {
+  height: 100%;
  }
 /* 底部样式 */
 .footer {

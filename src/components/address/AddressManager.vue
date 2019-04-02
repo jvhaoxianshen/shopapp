@@ -141,6 +141,9 @@ export default {
       if (this.$route.params.typed === 'selectedAddress') {
         localStorage.setItem('selectedAddressId', addressId)
         this.$router.push({name: 'GenerateOrder', params: {orderType: localStorage.getItem('orderType')}})
+      } else if (this.$route.params.typed === 'integralOrder') {
+        localStorage.setItem('selectedAddressId', addressId)
+        this.$router.back()
       } else {
         return 0
       }

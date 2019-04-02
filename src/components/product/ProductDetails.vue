@@ -73,7 +73,7 @@
     <!-- 内容区结束 -->
     <!-- 底部按钮开始 -->
     <div class="footer-container">
-      <li class="footer-kefu">
+      <li class="footer-kefu" @click="customService()">
         <img src="../../assets/icon/productDetail/kefu.svg" alt="">
         <p>客服</p>
       </li>
@@ -101,19 +101,39 @@ export default {
   created: function () {
     this.getProductDetail()
   },
+  beforeRouteEnter: function (to, from, next) {
+    if (from.name === 'ShopCar') {
+      localStorage.setItem('fromName', from.name)
+    } else if (from.name === 'Home' && from.params.type === 'home') {
+      localStorage.setItem('fromName', 'Home-home')
+    }
+    next((vm) => {
+      vm.loaderShow = true
+      vm.getProductDetail()
+    })
+  },
   beforeRouteLeave: function (to, from, next) {
+    this.setNumShow = false
     if (to.name === 'GenerateOrder') {
       localStorage.setItem('fromPath', from.path)
     }
-    next()
+    next(vm => {
+    })
   },
   methods: {
     // 返回上一页事件
     back: function () {
-      this.$router.push({name: 'Home'})
+      if (localStorage.getItem('fromName') === 'ShopCar') {
+        this.$router.push({name: 'ShopCar', params: {type: 'shopCarTab'}})
+      } else if (localStorage.getItem('fromName') === 'Home-home') {
+        this.$router.push({name: 'Home', params: {type: 'home'}})
+      } else {
+        this.$router.push({name: 'Home', params: {type: 'product'}})
+      }
     },
     // 进入购物车
     goShopCar: function () {
+      localStorage.setItem('productId', this.$route.params.productId)
       this.$router.push({name: 'ShopCar', params: {type: 'shopCar'}})
     },
     // 获取商品详情事件
@@ -158,10 +178,13 @@ export default {
     },
     // 控制选择数量窗口打开和关闭
     showFlag: function (data) {
-      console.log(data)
       if (data === 'close') {
         this.setNumShow = false
       }
+    },
+    // 客服
+    customService: function () {
+      this.$toast('客服热线0571-83819690')
     }
   }
 }
@@ -176,7 +199,7 @@ export default {
   .slide-fade-leave-active {
     transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-  .slide-fade-enter, .slide-fade-leave-to {
+  .slide-fade-leave-to {
     transform: translateY(700px);
     opacity: 0;
   }

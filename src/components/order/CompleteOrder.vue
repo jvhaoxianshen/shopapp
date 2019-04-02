@@ -14,7 +14,7 @@
   <!-- 按钮区域开始 -->
   <div class="but-container">
     <mt-button type="primary" class="home-btn" @click="backHome">返回首页</mt-button>
-    <mt-button type="primary" plain>查看订单</mt-button>
+    <mt-button type="primary" plain @click="queryOrder">查看订单</mt-button>
   </div>
   <!-- 按钮区域结束 -->
 </div>
@@ -31,14 +31,19 @@ export default {
     if (window.history && window.history.pushState) {
       window.addEventListener('popstate', () => {
         this.$router.go(0)
-        this.$router.push({name: 'Home'})
+        this.$router.push({name: 'Home', params: {type: 'home'}})
       }, true)
     }
   },
   methods: {
+    // 返回首页事件
     backHome: function () {
       this.$router.go(0)
-      this.$router.push({name: 'Home'})
+      this.$router.push({name: 'Home', params: {type: 'home'}})
+    },
+    // 查看订单事件
+    queryOrder: function () {
+      this.$router.push({name: 'OrderList', params: {orderType: '1'}})
     }
   }
 }

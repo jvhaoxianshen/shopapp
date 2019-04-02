@@ -102,7 +102,6 @@ export default {
       let data = {addressId: this.$route.params.addressId}
       this.axios.post('water/address/info', data)
         .then((res) => {
-          console.log(res)
           this.province = res.data[0].addressProvince
           this.city = res.data[0].addressCity
           this.district = res.data[0].addressDistrict

@@ -37,7 +37,7 @@
       <!-- 标题区开始 -->
       <div class="title">
         <span class="title-name">我的订单</span>
-        <span class="query-btn">
+        <span class="query-btn" @click="enterOrderList(-1)">
           <span>全部订单</span>
           <span class="order-enter"></span>
         </span>
@@ -45,19 +45,19 @@
       <!-- 标题区结束 -->
       <!-- 订单状态分类区开始 -->
       <div class="order-type">
-        <li>
+        <li @click="enterOrderList(0)">
           <img src="../../assets/icon/myInfo/obligation.svg" alt="">
           <p>待付款</p>
         </li>
-        <li>
+        <li @click="enterOrderList(1)">
           <img src="../../assets/icon/myInfo/waitorder.svg" alt="">
           <p>待发货</p>
         </li>
-        <li>
+        <li @click="enterOrderList(2)">
           <img src="../../assets/icon/myInfo/receivedorder.svg" alt="">
           <p>待收货</p>
         </li>
-        <li>
+        <li @click="enterOrderList(3)">
           <img src="../../assets/icon/myInfo/completionorder.svg" alt="">
           <p>交易完成</p>
         </li>
@@ -78,7 +78,7 @@
           <img src="../../assets/icon/myInfo/address.svg" alt="">
           <p>地址管理</p>
         </li>
-        <li>
+        <li @click="toIntegralMall()">
           <img src="../../assets/icon/myInfo/integralshop.svg" alt="">
           <p>积分商城</p>
         </li>
@@ -132,7 +132,15 @@ export default {
     },
     // 地址管理
     toAddress: function () {
-      this.$router.push({name: 'AddressManager'})
+      this.$router.push({name: 'AddressManager', params: {typed: 'all'}})
+    },
+    // 进入订单列表
+    enterOrderList: function (orderType) {
+      this.$router.push({name: 'OrderList', params: {orderType: orderType}})
+    },
+    // 进入积分商城
+    toIntegralMall: function () {
+      this.$router.push({name: 'IntergralProList'})
     }
   }
 }

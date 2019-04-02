@@ -3,7 +3,7 @@
     <!-- 内容容器区开始 -->
     <mt-tab-container v-model="message" class="container">
       <mt-tab-container-item id="home">
-        <mt-cell v-for="n in 20" title="tab-container 1" :key="n">{{n}}</mt-cell>
+        <homePage></homePage>
       </mt-tab-container-item>
       <mt-tab-container-item id="product">
         <productList></productList>
@@ -39,11 +39,12 @@
 </template>
 
 <script>
+import homePage from '../home/HomePage'
 import productList from '../product/ProductList'
 import shopCar from '../shopcar/ShopCar'
 import myInfo from '../myinfo/MyInfo'
 export default {
-  components: { productList, shopCar, myInfo },
+  components: { homePage, productList, shopCar, myInfo },
   data () {
     return {
       message: this.selected, // 选中的页面
@@ -62,10 +63,12 @@ export default {
         case 'home':
           this.setTabbarIcon()
           this.tabs[0] = require('../../assets/icon/tabbar/home-active.svg')
+          this.$router.push({name: 'Home', params: {type: 'home'}})
           break
         case 'product':
           this.setTabbarIcon()
           this.tabs[1] = require('../../assets/icon/tabbar/product-active.svg')
+          this.$router.push({name: 'Home', params: {type: 'product'}})
           break
         case 'shopcar':
           this.setTabbarIcon()
@@ -75,6 +78,7 @@ export default {
         case 'myinfo':
           this.setTabbarIcon()
           this.tabs[3] = require('../../assets/icon/tabbar/myinfo-active.svg')
+          this.$router.push({name: 'Home', params: {type: 'myinfo'}})
           break
       }
     }
